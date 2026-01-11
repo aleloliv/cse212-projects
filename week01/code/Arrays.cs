@@ -13,9 +13,9 @@ public static class Arrays
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
         // -----------------------------------------------------------------------------------------------------------------
-        // First create an empty array of type double and size using the variable length and an variable which value is 0. 
-        // Then create a loop that will use an temporary int variable that will count
-        // from 1.0 to the length and multiply the number variable by the temporary variable and add the result to the array,
+        // First create an empty array of type double and size using the variable length and a variable which value is 0. 
+        // Then create a loop that will use a temporary int variable that will count
+        // from 1 to the length and multiply the number variable by the temporary variable and add the result to the array,
         // the resulting array should be returned at the end.
         // ----------------------------------------------------------------------------------------------------------------
         double[] multiples = new double[length]; // Empty array with size of length
@@ -44,8 +44,10 @@ public static class Arrays
         // be implemented by another person.
         // -----------------------------------------------------------------------------------------------------------------
         // First, create a new temporary list that contains the values from the amount variable to the end of the original list, 
-        // than remove the values from the original list,
-        // lastly insert the values to the end of the original list, thus manipulating the original list and returning nothing.
+        // than remove the values from the original list, using a loop that repeats the amount of values that the temporary
+        // list has, and removes always at index 0, using RemoveAt
+        // lastly insert the values to the end of the original list using a loop to add all of the values from the
+        // temporary list, using foreach and Add, thus manipulating the original list and returning nothing.
         // -----------------------------------------------------------------------------------------------------------------
         if (data.Count == 0) // This makes sure that the list is not empty.
         {
