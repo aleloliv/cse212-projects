@@ -11,24 +11,55 @@ public class CustomerService {
         // Test Cases
 
         // Test 1
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Add 1 customer and serve this customer
+        // Expected Result: Display the customer that was added, this found that the ServeCustomer should get the customer before deleting from the list.
         Console.WriteLine("Test 1");
 
-        // Defect(s) Found: 
+        var service = new CustomerService(3);
+        service.AddNewCustomer();
+        service.ServeCustomer();
+
+        // Defect(s) Found: None
 
         Console.WriteLine("=================");
 
         // Test 2
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Add two customers and serve them in the right order.
+        // Expected Result: Display the customers in the same order that they were entered.
         Console.WriteLine("Test 2");
 
-        // Defect(s) Found: 
+        var service1 = new CustomerService(3);
+        service1.AddNewCustomer();
+        service1.AddNewCustomer();
+        service1.ServeCustomer();
+        service1.ServeCustomer();
+
+        // Defect(s) Found: None
 
         Console.WriteLine("=================");
 
-        // Add more Test Cases As Needed Below
+        // Test 3
+        // Scenario: Is the queue's size defaulted to 10 if an incorrect value is informed?
+        // Expected Result: The queue's size is defaulted to 10.
+        Console.WriteLine("Test 3");
+
+        var service2 = new CustomerService(-1);
+        service2.AddNewCustomer();
+        service2.ServeCustomer();
+
+        // Defect(s) Found: None
+
+        // Test 4
+        // Scenario: Trying to serve the customer before adding one.
+        // Expected Result: An error message is displayed.
+        Console.WriteLine("Test 4");
+
+        var service3 = new CustomerService(3);
+        service3.ServeCustomer();
+        service3.AddNewCustomer();
+
+        // Defect(s) Found: One, customer cannot be served before being added.
+        
     }
 
     private readonly List<Customer> _queue = new();
@@ -67,7 +98,7 @@ public class CustomerService {
     /// </summary>
     private void AddNewCustomer() {
         // Verify there is room in the service queue
-        if (_queue.Count > _maxSize) {
+        if (_queue.Count >= _maxSize) {
             Console.WriteLine("Maximum Number of Customers in Queue.");
             return;
         }
