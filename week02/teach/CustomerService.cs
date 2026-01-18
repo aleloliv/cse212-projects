@@ -19,7 +19,7 @@ public class CustomerService {
         service.AddNewCustomer();
         service.ServeCustomer();
 
-        // Defect(s) Found: None
+        // Defect(s) Found: The customer was being removed before it was served by ServeCustomer.
 
         Console.WriteLine("=================");
 
@@ -44,9 +44,8 @@ public class CustomerService {
         Console.WriteLine("Test 3");
 
         var service2 = new CustomerService(-1);
-        service2.AddNewCustomer();
-        service2.ServeCustomer();
-
+        Console.WriteLine(service2._maxSize);
+        
         // Defect(s) Found: None
 
         // Test 4
@@ -56,10 +55,22 @@ public class CustomerService {
 
         var service3 = new CustomerService(3);
         service3.ServeCustomer();
-        service3.AddNewCustomer();
-
-        // Defect(s) Found: One, customer cannot be served before being added.
         
+        // Defect(s) Found: This showed that the size of the queue should be checked by ServeCustomer before atempting to serve any customer.
+
+        // Test 5
+        // Scenario: What happens if I try to add more customers than the line's size?
+        // Expected Result: An error message should be displayed.
+        Console.WriteLine("Test 5");
+
+        var service4 = new CustomerService(3);
+        service4.AddNewCustomer();
+        service4.AddNewCustomer();
+        service4.AddNewCustomer();
+        service4.AddNewCustomer();
+        Console.WriteLine($"Service line: {service4}");
+
+        // Defect(s) Found: The AddNewCustomer method was checking if the total amount of elements in queue was only greater than the maximum capacity of the queue, instead of it being equal to or greater.
     }
 
     private readonly List<Customer> _queue = new();
@@ -119,9 +130,16 @@ public class CustomerService {
     /// Dequeue the next customer and display the information.
     /// </summary>
     private void ServeCustomer() {
-        _queue.RemoveAt(0);
-        var customer = _queue[0];
-        Console.WriteLine(customer);
+        if (_queue.Count <= 0)
+        {
+            Console.WriteLine("No customer to be served");
+        }
+        else
+        {
+            var customer = _queue[0];
+            _queue.RemoveAt(0);
+            Console.WriteLine(customer);
+        }
     }
 
     /// <summary>
