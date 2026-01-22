@@ -13,7 +13,7 @@ public class PersonQueue
     /// <param name="person">The person to add</param>
     public void Enqueue(Person person)
     {
-        _queue.Insert(0, person);
+        _queue.Add(person); // When inserting at index 0, one person enters the queue in front of the one that's already in line, this should not happen, using Add prevents this adding people in the correct order.
     }
 
     public Person Dequeue()

@@ -40,12 +40,15 @@ public class TakingTurnsQueue
         else
         {
             Person person = _people.Dequeue();
-            if (person.Turns > 1)
+            if (person.Turns <= 0) // This checks if the person has 0 turns, enqueueing them if so, this doesn't change the turns of the person
+            {
+                _people.Enqueue(person);
+            }
+            else if (person.Turns > 1) // Added else just to make sure this if is not ignored.
             {
                 person.Turns -= 1;
                 _people.Enqueue(person);
             }
-
             return person;
         }
     }
