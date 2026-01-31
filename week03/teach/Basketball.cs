@@ -32,5 +32,6 @@ public class Basketball
         Console.WriteLine($"Players: {{{string.Join(", ", players)}}}");
 
         var topPlayers = new string[10];
+
     }
 }
