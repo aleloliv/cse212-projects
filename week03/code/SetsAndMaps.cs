@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Text.Json;
 
 public static class SetsAndMaps
@@ -21,8 +22,23 @@ public static class SetsAndMaps
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
     public static string[] FindPairs(string[] words)
     {
-        // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        var word1 = new HashSet<string>(); // Creates a new set to store the word
+        var result = new HashSet<string>(); // This is what will be returned
+
+        foreach (var word in words) // Iterates through the list of words
+        {
+            if (word[0] == word[1]) continue; // If the word repeats its characters, end the code
+
+            string word2 = $"{word[1]}{word[0]}"; // Reverses the word and stores in another string
+
+            if (word1.Contains(word2)) // Checks if the word2 has the same characters as word1
+            {
+                result.Add($"{word2} & {word}"); // This will result in ab & ba
+            }
+
+            word1.Add(word); // Sets the set as the current word
+        }
+        return result.ToArray();
     }
 
     /// <summary>
@@ -42,9 +58,19 @@ public static class SetsAndMaps
         foreach (var line in File.ReadLines(filename))
         {
             var fields = line.Split(",");
-            // TODO Problem 2 - ADD YOUR CODE HERE
-        }
+            if (string.IsNullOrWhiteSpace(line)) continue; // Checks if the line is empty
 
+            string degree = fields[3].Trim(); // Column 4 (index 3)
+
+            if (degrees.ContainsKey(degree)) // Checks if the dictionary contains the degree read in the file, if so, adds the value to the key, if not, sets the value to 1
+            {
+                degrees[degree]++;
+            }
+            else
+            {
+                degrees[degree] = 1;
+            }
+        }
         return degrees;
     }
 
@@ -66,8 +92,34 @@ public static class SetsAndMaps
     /// </summary>
     public static bool IsAnagram(string word1, string word2)
     {
-        // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        var counts = new Dictionary<char, int>();
+
+        foreach (char character in word1) // Iterates through the word
+        {
+            if (character == ' ') continue; // If the word is empty or has spaces ends the program
+
+            char key = char.ToLower(character); // Sets every chacter to lower case
+
+            if (counts.ContainsKey(key)) // Checks if the character is in the dictionary, if it is adds 1 to the value, if not, sets it to 1
+                counts[key]++;
+            else
+                counts[key] = 1;
+        }
+
+        foreach (char character in word2) // Removes the letters from word2
+        {
+            if (character == ' ') continue; // If the word is empty or has spaces ends the program
+
+            char key = char.ToLower(character); // Sets every chacter to lower case
+
+            if (!counts.ContainsKey(key)) return false; // If the dictionary does not contain the word, ends the program
+
+            counts[key]--;
+
+            if (counts[key] == 0) counts.Remove(key); // Removes the letters from word2
+        }
+
+        return counts.Count == 0; // If there's anything last in the dictionary, it's not an anagram
     }
 
     /// <summary>
@@ -96,11 +148,19 @@ public static class SetsAndMaps
 
         var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
 
-        // TODO Problem 5:
-        // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
-        // on those classes so that the call to Deserialize above works properly.
-        // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
-        // 3. Return an array of these string descriptions.
-        return [];
+        var result = new List<string>(); // Create a list to store formatted earthquake summaries
+
+        foreach (var feature in featureCollection.Features) // Loops through all earthquake entries
+        {
+            var place = feature.Properties.Place; // Get the earthquake location
+            var mag = feature.Properties.Mag; // Get the earthquake magnitude
+
+            if (!string.IsNullOrWhiteSpace(place) && mag != null) // Only add valid entries (some entries may have null values)
+            {
+                result.Add($"{place} - Mag {mag}"); // Format: "Location - Mag X.XX"
+            }
+        }
+
+        return result.ToArray(); // Convert the list to an array and return it
     }
 }
