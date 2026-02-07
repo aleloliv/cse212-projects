@@ -14,7 +14,16 @@ public static class Recursion
     /// </summary>
     public static int SumSquaresRecursive(int n)
     {
-        // TODO Start Problem 1
+        int result;
+        if (n <= 0 && n >= 1000)
+        {
+            return 0;
+        }
+        else
+        {
+            result = n + 2;
+            SumSquaresRecursive(result);
+        }
         return 0;
     }
 
@@ -39,7 +48,18 @@ public static class Recursion
     /// </summary>
     public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
     {
-        // TODO Start Problem 2
+        if (word.Length == size)
+        {
+            results.Add(word);
+            return;
+        }
+        
+        for (int i = 0; i < letters.Length; i++)
+        {
+            char currentLetter = letters[i];
+            string remainingLetters = letters[..i] + letters[(i + 1)..];
+            PermutationsChoose(results, remainingLetters, size, word + currentLetter);
+        }
     }
 
     /// <summary>
