@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 
 public static class Recursion
 {
@@ -14,17 +15,15 @@ public static class Recursion
     /// </summary>
     public static int SumSquaresRecursive(int n)
     {
-        int result;
-        if (n <= 0 && n >= 1000)
+        // Base case: If number is 0 or less
+        if (n <= 0)
         {
             return 0;
         }
-        else
-        {
-            result = n + 2;
-            SumSquaresRecursive(result);
-        }
-        return 0;
+
+        // Calls the function recursively multiplying the number by itself and adding to the multiplication
+        // of the next number by itself, this number is subtracted by 1 until reaches 0, that ends the function calling
+        return n * n + SumSquaresRecursive(n - 1);
     }
 
     /// <summary>
@@ -48,17 +47,21 @@ public static class Recursion
     /// </summary>
     public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
     {
+        // Base case: when the word reaches the desired size
         if (word.Length == size)
         {
             results.Add(word);
             return;
         }
-        
+
+        // Try adding each available letter
         for (int i = 0; i < letters.Length; i++)
         {
-            char currentLetter = letters[i];
-            string remainingLetters = letters[..i] + letters[(i + 1)..];
-            PermutationsChoose(results, remainingLetters, size, word + currentLetter);
+             // Remove the chosen letter
+            var lettersLeft = letters.Remove(i, 1);
+
+            // Recursive call with one more letter added to the word
+            PermutationsChoose(results, lettersLeft, size, word + letters[i]);
         }
     }
 
@@ -116,10 +119,35 @@ public static class Recursion
         if (s == 3)
             return 4;
 
-        // TODO Start Problem 3
+        // Creates a new decimal variable to store how many
+        // ways there are to climb the stairs
+        decimal ways;
 
-        // Solve using recursion
-        decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
+        // If the dictionary is null, than creates a new dictionary. This prevents creating a new dictionary 
+        // every iteration of the function, or replacing the existing one
+        if (remember == null)
+        {
+            remember = new Dictionary<int, decimal>();
+        }
+
+        // If the dictionary already has the value being searched, than returns the value with the key s
+        if (remember.ContainsKey(s))
+        {
+            return remember[s];
+        }
+
+        // Counts how many ways there are to climb the stairs, 
+        // this calls the function recursively 3 times, using one step, two steps and three steps, 
+        // each time the function is called, the existing dictionary is taken with the call 
+        // in order to remember the result for a specific number
+        ways = CountWaysToClimb(s - 1, remember)
+             + CountWaysToClimb(s - 2, remember)
+             + CountWaysToClimb(s - 3, remember);
+
+        // Remember the value for a number of steps, storing it in the dictionary
+        remember[s] = ways;
+
+        // Returns the number of ways the stairs can be climbed
         return ways;
     }
 
@@ -138,7 +166,29 @@ public static class Recursion
     /// </summary>
     public static void WildcardBinary(string pattern, List<string> results)
     {
-        // TODO Start Problem 4
+        // Base case: If the pattern doesn't contain any * than add the word to the result list and stop
+        if (!pattern.Contains("*"))
+        {
+            results.Add(pattern); // Add the word to the list
+            return;
+        }
+
+        // Gets the index of the first * in the word
+        int index = pattern.IndexOf("*");
+
+        // Splits the word using the index of the * forming a new word that contains everything before the * exclusively
+        string firstHalf = $"{pattern[..index]}";
+
+        // Splits the word using the index of the * forming a new word that contains everything after the * exclusively
+        string secondHalf = $"{pattern[(index + 1)..]}";
+
+        // Replaces the * by a 0 and an 1 respectively
+        string newWord1 = $"{firstHalf}0{secondHalf}";
+        string newWord2 = $"{firstHalf}1{secondHalf}";
+
+        // Calls the function recursively using the words created before with 0 and 1 and the existing list of results
+        WildcardBinary(newWord1, results);
+        WildcardBinary(newWord2, results);
     }
 
     /// <summary>
@@ -154,9 +204,37 @@ public static class Recursion
         }
         
         // currPath.Add((1,2)); // Use this syntax to add to the current path
+        currPath.Add((x, y));
 
-        // TODO Start Problem 5
-        // ADD CODE HERE
+        // Base case: Checks if the current cordinates are the end of the maze
+        // if they are, then add it to the results and remove them from the current path to prevent messing up all the paths
+        if (maze.IsEnd(x, y))
+        {
+            results.Add(currPath.AsString());
+            currPath.RemoveAt((currPath.Count - 1));
+            return;
+        }
+
+        // Tryies to move to the right, left, up and down, if it's a valid move, calls the function recursively
+        if (maze.IsValidMove(currPath, x + 1, y))
+        {
+            SolveMaze(results, maze, x + 1, y, currPath);
+        }
+        if (maze.IsValidMove(currPath, x - 1, y))
+        {
+            SolveMaze(results, maze, x - 1, y, currPath);
+        }
+        if (maze.IsValidMove(currPath, x, y + 1))
+        {
+            SolveMaze(results, maze, x, y + 1, currPath);
+        }
+        if (maze.IsValidMove(currPath, x, y - 1))
+        {
+            SolveMaze(results, maze, x, y - 1, currPath);
+        }
+
+        // Removes the last move from the path to avoid messing the path
+        currPath.RemoveAt((currPath.Count - 1));
 
         // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
     }
