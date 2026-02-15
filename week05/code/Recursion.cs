@@ -211,7 +211,7 @@ public static class Recursion
         if (maze.IsEnd(x, y))
         {
             results.Add(currPath.AsString());
-            currPath.RemoveAt((currPath.Count - 1));
+            currPath.RemoveAt(currPath.Count - 1);
             return;
         }
 

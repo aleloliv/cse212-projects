@@ -48,6 +48,32 @@ public static class Trees
     /// <param name="bst">the BinarySearchTree in which to insert the values</param>
     private static void InsertMiddle(int[] sortedNumbers, int first, int last, BinarySearchTree bst)
     {
-        // TODO Start Problem 5
+        // Base case: if the first number is greater than the last, stop the recursion, 
+        // in other words if the index of the first number is greater than the last, it stops the function
+        // This will only happen if the list cannot be divided any further, 
+        // and the funcion recieved the same index numbers as paramathers, 
+        // since the recursive call is subtracting 1 from the last number, 
+        // than this will only be true if there is no more numbers to be added to the tree
+        if (first > last)
+        {
+            return;
+        }
+        // Calculates the middle of the list by adding both numbers and dividing by 2, for example, list = [1, 2, 3, 4, 5],
+        // The first number is 0 and the last is 4, 0 + 4 = 4, 4 / 2 = 2
+        int middle = (first + last) / 2;
+
+        // Insert the value in the middle of the list, in the example list would be 3 wich is index 2
+        bst.Insert(sortedNumbers[middle]);
+
+        // Calls the function recursively to add to the right and to the left,
+        // This works dividing the list into smaller lists using the index middle,
+        // For the left it would call (using the example) [1, 2], index 0 and 2 - 1 = 1
+        // For the right it would call [4, 5] index 2 + 1 = 3 and 4
+        // Than for the left it would call [1] index 0 and 1 - 1 = 0
+        // For the right [2] index 1 and 2 - 1 = 1
+        // Than again for the left it would call [] because it would be 0 and 0 - 1 = -1 
+        // or 1 and 1 - 1 = 0 wich stops the function 
+        InsertMiddle(sortedNumbers, first, middle - 1, bst);
+        InsertMiddle(sortedNumbers, middle + 1, last, bst);
     }
 }
